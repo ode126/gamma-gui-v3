@@ -41,7 +41,7 @@ apk add --no-cache libc6-compat gcompat libstdc++
 
 ### 2. 部署应用
 
-#### 方式 A：Mac 上构建，上传产物到 Alpine（推荐）
+#### 方式 A：Mac 上构建，上传产物到 Alpine（不推荐，可能导致部署失败）
 
 `node_modules` 中包含平台相关的原生二进制（如 `@next/swc-darwin-arm64`、`claude-agent-sdk` CLI），
 **不能**直接将 Mac 的 `node_modules/` 上传到 Alpine。正确做法是只上传构建产物，在 Alpine 上重新安装依赖。
@@ -86,7 +86,7 @@ node_modules/.bin/next start -p 3000
 > **原理**：`.next/` 目录是纯 JS/CSS，与平台无关，可以直接复用。
 > `npm ci --omit=dev` 会在 Alpine 上下载适配 musl/x86_64 的原生模块。
 
-#### 方式 B：服务器上直接构建
+#### 方式 B：服务器上直接构建（推荐）
 
 ```sh
 cd /opt/gamma
@@ -102,7 +102,7 @@ npm run start
 
 Alpine 使用 **OpenRC** 而非 systemd。推荐使用 `s6-overlay` 或直接写 OpenRC service。
 
-#### 使用 pm2（最简单）
+#### 使用 pm2（最简单）（推荐）
 
 ```sh
 npm install -g pm2
