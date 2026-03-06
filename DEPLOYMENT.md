@@ -21,6 +21,8 @@ apk update && apk upgrade
 # 安装运行时依赖
 # Node.js 20 LTS + npm
 apk add --no-cache nodejs-current npm
+apk add --no-cache ca-certificates
+apk add --no-cache bash git
 
 # 验证版本
 node -v   # 应 >= 20.x
@@ -50,12 +52,13 @@ npm install
 npm run build
 
 # 打包上传到服务器（排除 node_modules）
-rsync -av --exclude='node_modules' --exclude='.env.local' \
-  .next/ public/ package.json package-lock.json \
-  user@server:/opt/gamma/
+# rsync -av --exclude='node_modules' --exclude='.env.local' \
+#   .next/ public/ package.json package-lock.json \
+#   user@server:/opt/gamma/
 
 # 或用 scp
-# scp -r .next public package.json package-lock.json user@server:/opt/gamma/
+scp -r .next package.json package-lock.json root@10.2.113.98:/opt/gamma/
+scp -r .next root@10.2.113.98:/opt/gamma/
 ```
 
 ```sh

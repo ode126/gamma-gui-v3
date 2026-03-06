@@ -111,6 +111,7 @@ export async function POST(req) {
         if (!resultSent) send({ type: 'done' });
       } catch (err) {
         if (err?.name !== 'AbortError') {
+          console.error('[chat/route] SDK error:', err);
           send({ type: 'error', message: err?.message || '请求失败' });
         }
       } finally {
