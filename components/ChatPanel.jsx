@@ -221,14 +221,58 @@ function MessageRow({ msg, onApply }) {
       }}>
         {isUser ? (
           <span style={{ whiteSpace: 'pre-wrap' }}>{msg.content}</span>
+        ) : msg.streaming && !msg.content ? (
+          <ThinkingDots />
         ) : (
           <MdContent
-            content={msg.content || (msg.streaming ? '' : '…')}
+            content={msg.content || '…'}
             onApply={onApply}
             isStreaming={msg.streaming}
           />
         )}
       </div>
+    </div>
+  );
+}
+
+// ── Thinking dots ────────────────────────────────────────────────────────────
+function ThinkingDots() {
+  const [dots, setDots] = useState('');
+  useEffect(() => {
+    const frames = ['', '.', '..', '...'];
+    let i = 0;
+    const timer = setInterval(() => {
+      i = (i + 1) % frames.length;
+      setDots(frames[i]);
+    }, 420);
+    return () => clearInterval(timer);
+  }, []);
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8, padding: '2px 0' }}>
+      <span style={{ fontSize: 13, color: '#6060a0', fontStyle: 'italic' }}>
+        思考中{dots}
+      </span>
+      <span style={{
+        display: 'inline-flex', gap: 4, alignItems: 'center',
+      }}>
+        {[0, 1, 2].map((i) => (
+          <span
+            key={i}
+            style={{
+              width: 5, height: 5, borderRadius: '50%',
+              background: '#4f46e5',
+              display: 'inline-block',
+              animation: `thinking-bounce 1.2s ease-in-out ${i * 0.2}s infinite`,
+            }}
+          />
+        ))}
+      </span>
+      <style>{`
+        @keyframes thinking-bounce {
+          0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+          40% { transform: translateY(-5px); opacity: 1; }
+        }
+      `}</style>
     </div>
   );
 }
